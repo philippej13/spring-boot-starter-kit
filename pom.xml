@@ -20,6 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <springfox.version>2.6.1</springfox.version>
+        <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,22 @@
             <version>${springfox.version}</version>
         </dependency>
 
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <version>2.0.0.RELEASE</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth2.version}</version>
+        </dependency>
 
 <!--test -->
         <dependency>
@@ -77,4 +94,16 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>waf-snapshots</id>
+            <name>AT Nexus Snapshots</name>
+            <url>http://repo.april-waf.local/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>waf-releases</id>
+            <name>AT Nexus Releases</name>
+            <url>http://repo.april-waf.local/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 </project>
