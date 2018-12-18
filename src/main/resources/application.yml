@@ -1,3 +1,4 @@
+##Oauth2Client Autoconfigure
 security:
   oauth2:
     client:
@@ -11,6 +12,10 @@ security:
     resource:
       #userInfoUri: https://rec-api-gateway.april.fr/am/auth/selfcare/oidc/userinfo
       tokenInfoUri: https://rec-api-gateway.april.fr/am/auth/selfcare/oauth/introspect
+
+#Access Management Admin
+am:
+  baseUri: http://recapigra-vli01.april.interne.fr:8092/
 
 logging:
   level:

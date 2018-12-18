@@ -1,11 +1,14 @@
 package com.apriltechnologies.amadmin.controller;
 
+import com.apriltechnologies.amadmin.model.AMCreateAccountResponseDTO;
 import com.apriltechnologies.amadmin.model.AccountCreateRequestDTO;
 import com.apriltechnologies.amadmin.model.AccountDTO;
+import com.apriltechnologies.amadmin.service.AMService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,10 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/security/admin")
 public class AccountController {
+
+    @Autowired
+    AMService amService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/accounts")
     public ResponseEntity<AccountDTO> getAccount() {
         AccountDTO account =  new AccountDTO("1", "email", "Nom", "Prénom");
@@ -28,9 +35,15 @@ public class AccountController {
     public ResponseEntity<Object> createAccount(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO, HttpServletRequest request) {
         System.out.println(accountCreateRequestDTO);
         //Creation du compte
-        AccountDTO account =  new AccountDTO("15345", "email", "Nom", "Prenom");
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
-                buildAndExpand(account.getId()).toUri();
+        String id = amService.createAccount(accountCreateRequestDTO.getDomaine(),
+                accountCreateRequestDTO.getEmail(),
+                accountCreateRequestDTO.getName(),
+                accountCreateRequestDTO.getFirstName());
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
         //return ResponseEntity.ok(new AccountCreateResponseDTO(true));
         return ResponseEntity.created(location).build();
     }

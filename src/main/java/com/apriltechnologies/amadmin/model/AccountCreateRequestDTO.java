@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AccountCreateRequestDTO {
+    private String domaine;
     private String email;
-    private String nom;
-    private String prenom;
+    private String name;
+    private String firstName;
 }
 
