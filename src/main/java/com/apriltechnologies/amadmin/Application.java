@@ -1,4 +1,4 @@
-package com.desilium.hello;
+package com.apriltechnologies.amadmin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

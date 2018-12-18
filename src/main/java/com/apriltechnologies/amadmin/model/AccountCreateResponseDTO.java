@@ -1,4 +1,4 @@
-package com.desilium.hello.model;
+package com.apriltechnologies.amadmin.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.desilium.hello.messagereceiver;
+package com.apriltechnologies.amadmin.messagereceiver;
 
 import java.util.concurrent.CountDownLatch;
 

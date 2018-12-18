@@ -1,4 +1,4 @@
-package com.desilium.hello.model;
+package com.apriltechnologies.amadmin.model;
 
 
 import lombok.AllArgsConstructor;
@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class AccountDTO {
     private String id;
     private String email;
-    private String name;
+    private String nom;
+    private String prenom;
 }
