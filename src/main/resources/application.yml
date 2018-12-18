@@ -17,4 +17,10 @@ logging:
     #org.springframework.web: debug
     #org.springframework.security: debug
     #org.springframework.web-security: debug
-    org.springframework: debug
+    org.springframework: error
+
+spring:
+    rabbitmq.host: localhost
+    rabbitmq.port: 5672
+    rabbitmq.username: guest
+    rabbitmq.password: guest
