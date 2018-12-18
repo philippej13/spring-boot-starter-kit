@@ -5,12 +5,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 
 @Configuration
 @EnableResourceServer
+@EnableOAuth2Client
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Override
@@ -21,7 +23,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     }
 
-    @Bean
+  /*  @Bean
     public RemoteTokenServices remoteTokenServices(@Value("${security.oauth2.resource.tokenInfoUri}") String checkTokenEndpoint,
                                                    @Value("${security.oauth2.client.clientId}") String clientId,
                                                    @Value("${security.oauth2.client.clientSecret}") String clientSecret) {
@@ -31,6 +33,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         remoteTokenServices.setClientSecret(clientSecret);
         return remoteTokenServices;
     }
-
+*/
 
 }

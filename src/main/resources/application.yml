@@ -17,4 +17,4 @@ logging:
     #org.springframework.web: debug
     #org.springframework.security: debug
     #org.springframework.web-security: debug
-    org.springframework: error
+    org.springframework: debug
