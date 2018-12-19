@@ -1,3 +1,5 @@
+##TEST RESOURCES###
+
 ##Oauth2Client Autoconfigure
 security:
   oauth2:

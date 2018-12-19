@@ -23,8 +23,8 @@ import java.util.Optional;
 @Slf4j
 public class AMServiceImpl implements AMService {
 
-    private String amBaseUri;
-    private RestTemplate restTemplate;
+    String amBaseUri;
+    RestTemplate restTemplate;
 
     private static String CREATE_SUFFIXE_URL = "/create";
     private static String UPDATE_SUFFIXE_URL = "/update";
@@ -52,7 +52,6 @@ public class AMServiceImpl implements AMService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
         ResponseEntity<AMCreateAccountResponseDTO> responseEntity;
-
         try {
             String url = amBaseUri + "/" + domaine + CREATE_SUFFIXE_URL;
             responseEntity = restTemplate.postForEntity(url, request, AMCreateAccountResponseDTO.class);
