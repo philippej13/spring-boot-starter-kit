@@ -18,9 +18,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <springfox.version>2.6.1</springfox.version>
-        <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version>
+        <!-- <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version> -->
         <lombok.version>1.18.4</lombok.version>
         <skipITs>true</skipITs>
     </properties>

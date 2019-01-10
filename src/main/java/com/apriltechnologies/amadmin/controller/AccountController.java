@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/security/admin")
 public class AccountController {
 
@@ -25,10 +26,11 @@ public class AccountController {
     AMService amService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/accounts")
-    public ResponseEntity<AccountDTO> getAccount() {
+    public ResponseEntity<AccountDTO[]> getAccount() {
         AccountDTO account =  new AccountDTO("1", "email", "Nom", "Prénom");
+        AccountDTO account2 =  new AccountDTO("2", "email2", "Nom2", "Prénom2");
 
-        return ResponseEntity.ok(account);
+        return ResponseEntity.ok(new AccountDTO[] {account, account2});
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/accounts")

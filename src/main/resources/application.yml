@@ -1,3 +1,5 @@
+##TEST RESOURCES###
+
 ##Oauth2Client Autoconfigure
 security:
   oauth2:
@@ -27,6 +29,7 @@ logging:
 spring:
     application:
       name: amadmin
+    #RabbitMQ properties
     rabbitmq.host: localhost
     rabbitmq.port: 5672
     rabbitmq.username: guest
