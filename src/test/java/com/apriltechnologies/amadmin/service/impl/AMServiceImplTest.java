@@ -1,6 +1,7 @@
 package com.apriltechnologies.amadmin.service.impl;
 
-import com.apriltechnologies.amadmin.model.AMCreateAccountResponseDTO;
+import com.apriltechnologies.amadmin.model.AMCreateAccountResponse;
+import com.apriltechnologies.amadmin.model.Account;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,16 +21,14 @@ import static org.mockito.Mockito.when;
 public class AMServiceImplTest {
 
     @InjectMocks
-    private AMServiceImpl amService;
+    private AMAccountServiceImpl amService;
 
     @Mock
     private RestTemplate restTemplate;
 
     @Before
     public void init() {
-
         MockitoAnnotations.initMocks(this);
-
     }
 
     @Test
@@ -37,13 +36,14 @@ public class AMServiceImplTest {
         String id = "5";
         amService.amBaseUri = "http://recapigra-vli01.april.interne.fr:8092/";
         //On mocke la réponse du restTemplate
-        AMCreateAccountResponseDTO amCreateAccountResponseDTO =
-                new AMCreateAccountResponseDTO("domaine", "email", "created", id);
-        ResponseEntity<AMCreateAccountResponseDTO> responseEntity = new ResponseEntity<>(amCreateAccountResponseDTO, HttpStatus.OK);
-        when(restTemplate.postForEntity(anyString(), any(HttpEntity.class), eq(AMCreateAccountResponseDTO.class))).thenReturn(responseEntity);
+        AMCreateAccountResponse amCreateAccountResponse =
+                new AMCreateAccountResponse("domaine", "email", "created", id);
+        ResponseEntity<AMCreateAccountResponse> responseEntity = new ResponseEntity<>(amCreateAccountResponse, HttpStatus.OK);
+        when(restTemplate.postForEntity(anyString(), any(HttpEntity.class), eq(AMCreateAccountResponse.class))).thenReturn(responseEntity);
 
         //On appelle le service AMService
-        String result = amService.createAccount("domaine", "email", "name", "firstname");
+        Account account = new Account(null, "domaine", "email", "name", "firstname");
+        String result = amService.createAccount(account);
 
         //On vérifie le test
         assertEquals(result, id);

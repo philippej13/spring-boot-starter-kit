@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AccountCreateRequestDTO {
+public class AccountCreateRequest {
     private String domaine;
     private String email;
     private String name;

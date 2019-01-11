@@ -1,16 +1,21 @@
 package com.apriltechnologies.amadmin.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.codecs.pojo.annotations.BsonId;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AccountCreateResponseDTO {
-    @JsonProperty("created")
-    private boolean created;
+public class Account {
+    @BsonId
+    private String id;
+    private String domaine;
+    private String email;
+    private String nom;
+    private String prenom;
 }

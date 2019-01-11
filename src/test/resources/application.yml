@@ -4,20 +4,20 @@
 security:
   oauth2:
     client:
-      clientId: selfcare_client
-      clientSecret: selfcare_secret
-      #accessTokenUri: https://rec-api-gateway.april.fr/am/auth/selfcare/oauth/token
-      #userAuthorizationUri: https://rec-api-gateway.april.fr/am/auth/selfcare/oauth/authorize
+      clientId: test_client
+      clientSecret: test_secret
+      #accessTokenUri: https://gravitee-am/domaine1/oauth/token
+      #userAuthorizationUri: https://gravitee-am/domaine1/oauth/authorize
       #tokenName: access_token
       #grant-type: client_credentials
       #scope: openid
     resource:
-      #userInfoUri: https://rec-api-gateway.april.fr/am/auth/selfcare/oidc/userinfo
-      tokenInfoUri: https://rec-api-gateway.april.fr/am/auth/selfcare/oauth/introspect
+      #userInfoUri: https://gravitee-am/domaine1/oidc/userinfo
+      tokenInfoUri: https://gravitee-am/domaine1/oauth/introspect
 
 #Access Management Admin
 am:
-  baseUri: http://recapigra-vli01.april.interne.fr:8092/
+  baseUri: http://gravitee-am:8092/
 
 logging:
   level:

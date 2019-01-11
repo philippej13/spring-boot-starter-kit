@@ -1,11 +1,13 @@
 package com.apriltechnologies.amadmin.service.impl;
 
 import com.apriltechnologies.amadmin.error.CreateAccountError;
-import com.apriltechnologies.amadmin.model.AMCreateAccountResponseDTO;
-import com.apriltechnologies.amadmin.model.AccountDTO;
-import com.apriltechnologies.amadmin.service.AMService;
+import com.apriltechnologies.amadmin.model.AMCreateAccountResponse;
+import com.apriltechnologies.amadmin.model.Account;
+
+import com.apriltechnologies.amadmin.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,11 +19,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
-public class AMServiceImpl implements AMService {
+@Qualifier("amService")
+public class AMAccountServiceImpl implements AccountService {
 
     String amBaseUri;
     RestTemplate restTemplate;
@@ -33,35 +37,47 @@ public class AMServiceImpl implements AMService {
     private static String GET_SUFFIXE_URL = "/get";
 
     @Autowired
-    public AMServiceImpl(@Value("${am.baseUri}") String amBaseUri, RestTemplate restTemplate) {
+    public AMAccountServiceImpl(@Value("${am.baseUri}") String amBaseUri, RestTemplate restTemplate) {
         this.amBaseUri = amBaseUri;
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public String createAccount(String domaine, String email, String name, String firstName) {
+    public Account findByEmail(String domaine, String email) {
+        return null;
+    }
+
+    @Override
+    public List<Account> findAllByDomaine(String domaine) {
+        return null;
+    }
+
+    @Override
+    public String createAccount(Account account) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("email", email);
-        body.add("name", name);
-        body.add("firstName", "firstName");
+        body.add("email", account.getEmail());
+        body.add("name", account.getNom());
+        body.add("firstName", account.getPrenom());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<AMCreateAccountResponseDTO> responseEntity;
+        ResponseEntity<AMCreateAccountResponse> responseEntity;
         try {
-            String url = amBaseUri + "/" + domaine + CREATE_SUFFIXE_URL;
-            responseEntity = restTemplate.postForEntity(url, request, AMCreateAccountResponseDTO.class);
+            String url = amBaseUri + "/" + account.getDomaine() + CREATE_SUFFIXE_URL;
+            responseEntity = restTemplate.postForEntity(url, request, AMCreateAccountResponse.class);
         } catch (RestClientException exception) {
             log.error("", exception);
             throw new CreateAccountError();
         }
 
+
         return Optional.ofNullable(responseEntity.getBody().getId())
                 .orElseThrow(CreateAccountError::new);
+
 
     }
 
@@ -76,12 +92,12 @@ public class AMServiceImpl implements AMService {
     }
 
     @Override
-    public AccountDTO getAccount(String domaine, String email) {
+    public Account updateAccount(String domaine, String email, String name, String firstName) {
         return null;
     }
 
     @Override
-    public AccountDTO updateAccount(String domaine, String email, String name, String firstName) {
-        return null;
+    public Optional<Account> findById(String id) {
+        return Optional.empty();
     }
 }

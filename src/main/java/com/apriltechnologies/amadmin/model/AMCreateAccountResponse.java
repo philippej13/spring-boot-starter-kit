@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AMCreateAccountResponseDTO {
+public class AMCreateAccountResponse {
     @JsonProperty("domaine")
     private String domaine;
     @JsonProperty("email")

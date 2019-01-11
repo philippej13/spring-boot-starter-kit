@@ -19,6 +19,12 @@ security:
 am:
   baseUri: http://recapigra-vli01.april.interne.fr:8092/
 
+mongo:
+  host: localhost
+  port: 27017
+  databaseName: amadmin
+
+
 logging:
   level:
     #org.springframework.web: debug

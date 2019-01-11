@@ -1,14 +1,14 @@
 package com.apriltechnologies.amadmin.controller;
 
-import com.apriltechnologies.amadmin.model.AMCreateAccountResponseDTO;
-import com.apriltechnologies.amadmin.model.AccountCreateRequestDTO;
-import com.apriltechnologies.amadmin.model.AccountDTO;
-import com.apriltechnologies.amadmin.service.AMService;
+import com.apriltechnologies.amadmin.model.AccountCreateRequest;
+import com.apriltechnologies.amadmin.model.Account;
+import com.apriltechnologies.amadmin.service.AccountService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +16,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -23,34 +26,24 @@ import java.net.URI;
 public class AccountController {
 
     @Autowired
-    AMService amService;
+    @Qualifier("localService")
+    AccountService accountService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/accounts")
-    public ResponseEntity<AccountDTO[]> getAccount() {
-        AccountDTO account =  new AccountDTO("1", "email", "Nom", "Prénom");
-        AccountDTO account2 =  new AccountDTO("2", "email2", "Nom2", "Prénom2");
+    @RequestMapping(method = RequestMethod.GET, value = "/accounts/{domaine}/{id}")
+    public ResponseEntity<Account> getAccount(@PathVariable String domaine, @PathVariable String id) {
+        Optional<Account> account = accountService.findById(id);
+        return account.map(acc -> ResponseEntity.ok(acc)).orElse(ResponseEntity.notFound().build());
 
-        return ResponseEntity.ok(new AccountDTO[] {account, account2});
+
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/accounts/{domaine}")
+    public ResponseEntity<List<Account>> getAccounts(@PathVariable String domaine) {
+        List<Account> accounts = accountService.findAllByDomaine(domaine);
+        return ResponseEntity.ok(accounts);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/accounts")
-    public ResponseEntity<Object> createAccount(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO, HttpServletRequest request) {
-        System.out.println(accountCreateRequestDTO);
-        //Creation du compte
-        String id = amService.createAccount(accountCreateRequestDTO.getDomaine(),
-                accountCreateRequestDTO.getEmail(),
-                accountCreateRequestDTO.getName(),
-                accountCreateRequestDTO.getFirstName());
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
-        //return ResponseEntity.ok(new AccountCreateResponseDTO(true));
-        return ResponseEntity.created(location).build();
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/accounts2")
     @ApiOperation(tags = "Gestion des comptes", value = "Création du compte")
     @ResponseStatus(code = HttpStatus.CREATED)
     @ApiResponses(value = {
@@ -58,13 +51,20 @@ public class AccountController {
             @ApiResponse(code = 500, message = "Erreur interne"),
             @ApiResponse(code = 401, message = "Non authentifié"),
             @ApiResponse(code = 403, message = "Non authorisé")})
-    public ResponseEntity<Object> createAccount2(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO, HttpServletRequest request) {
-        System.out.println(accountCreateRequestDTO);
-        //Creation du compte
-        AccountDTO account =  new AccountDTO("15345", "email", "Nom", "Prénom");
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
-                buildAndExpand(account.getId()).toUri();
-        //return ResponseEntity.ok(new AccountCreateResponseDTO(true));
+    public ResponseEntity<Object> createAccount(@RequestBody AccountCreateRequest accountCreateRequest, HttpServletRequest request) {
+        System.out.println(accountCreateRequest);
+        ///Creation du compte
+
+        Account account = new Account(UUID.randomUUID().toString(), accountCreateRequest.getDomaine(),
+                accountCreateRequest.getEmail(),
+                accountCreateRequest.getName(),
+                accountCreateRequest.getFirstName());
+        String id = accountService.createAccount(account);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{domaine}/{id}")
+                .buildAndExpand(accountCreateRequest.getDomaine(), id)
+                .toUri();
         return ResponseEntity.created(location).build();
     }
 }
