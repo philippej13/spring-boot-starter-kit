@@ -131,6 +131,23 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <description>${project.description}</description>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
@@ -155,16 +172,4 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>waf-snapshots</id>
-            <name>AT Nexus Snapshots</name>
-            <url>http://repo.april-waf.local/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>waf-releases</id>
-            <name>AT Nexus Releases</name>
-            <url>http://repo.april-waf.local/nexus/content/repositories/releases/</url>
-        </repository>
-    </repositories>
 </project>

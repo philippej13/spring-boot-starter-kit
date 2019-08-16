@@ -19,11 +19,6 @@ security:
 am:
   baseUri: http://gravitee-am:8092/
 
-mongo:
-  host: localhost
-  port: 27017
-  databaseName: amadmin
-
 
 logging:
   level:
@@ -40,3 +35,6 @@ spring:
     rabbitmq.port: 5672
     rabbitmq.username: guest
     rabbitmq.password: guest
+    data.mongodb:
+      #uri: mongodb://user:password@host1:27017/starterkit?authSource=starterkit&ssl=false
+      uri: mongodb://guest:guest@localhost:27017/starterkit
