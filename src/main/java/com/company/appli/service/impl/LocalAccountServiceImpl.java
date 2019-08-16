@@ -2,7 +2,7 @@ package com.company.appli.service.impl;
 
 import com.company.appli.model.Account;
 import com.company.appli.repository.AccountRepository;
-import com.company.appli.service.AccountService;
+import com.company.appli.service.LocalAccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @Qualifier("localService")
-public class LocalAccountServiceImpl implements AccountService {
+public class LocalAccountServiceImpl implements LocalAccountService {
 
     AccountRepository accountRepository;
 

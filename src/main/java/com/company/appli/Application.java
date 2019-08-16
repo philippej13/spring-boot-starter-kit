@@ -11,9 +11,6 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-    @Autowired
-    AccountRepositoryCustom accountRepository;
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -21,11 +18,6 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("------------Démarrage de l'application-----------");
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 
 

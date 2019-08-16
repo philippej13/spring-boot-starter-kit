@@ -1,83 +1,133 @@
 package com.company.appli.service.impl;
 
-import com.company.appli.error.CreateAccountError;
-import com.company.appli.model.AMCreateAccountResponse;
-import com.company.appli.model.Account;
 
+import com.company.appli.configuration.AMServiceConfiguration;
+import com.company.appli.error.CreateAccountError;
 import com.company.appli.service.AccountService;
+import com.company.appli.service.LocalAccountService;
+import io.gravitee.am.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Slf4j
 @Qualifier("amService")
 public class AMAccountServiceImpl implements AccountService {
 
-    String amBaseUri;
+    AMServiceConfiguration amServiceConfiguration;
     RestTemplate restTemplate;
 
-    private static String CREATE_SUFFIXE_URL = "/create";
-    private static String UPDATE_SUFFIXE_URL = "/update";
-    private static String DELETE_SUFFIXE_URL = "/delete";
-    private static String EXISTS_SUFFIXE_URL = "/exists";
-    private static String GET_SUFFIXE_URL = "/get";
-
     @Autowired
-    public AMAccountServiceImpl(@Value("${am.baseUri}") String amBaseUri, RestTemplate restTemplate) {
-        this.amBaseUri = amBaseUri;
+    public AMAccountServiceImpl(@Qualifier("restTemplateAM") RestTemplate restTemplate,
+                                AMServiceConfiguration amServiceConfiguration) {
         this.restTemplate = restTemplate;
+        this.amServiceConfiguration = amServiceConfiguration;
+
     }
 
     @Override
-    public Account findByEmail(String domaine, String email) {
-        return null;
-    }
+    public Boolean findByUserName(String domaine, String userName) {
+        class ListeUsers {
+            List<io.gravitee.am.model.User> data;
 
-    @Override
-    public List<Account> findAllByDomaine(String domaine) {
-        return null;
-    }
+            public ListeUsers(List<User> data) {
+                this.data = data;
+            }
 
-    @Override
-    public String createAccount(Account account) {
+            public List<User> getData() {
+                return data;
+            }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            public void setData(List<User> data) {
+                this.data = data;
+            }
+        }
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("email", account.getEmail());
-        body.add("name", account.getNom());
-        body.add("firstName", account.getPrenom());
+        String lUri = amServiceConfiguration.getAmManagementBaseUri() + "management/domains/" + domaine + "/users";
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString(lUri)
+                // Add query parameter
+                .queryParam("q", userName);
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        String response = restTemplate.getForEntity(builder.toUriString(), String.class).getBody();
 
-        ResponseEntity<AMCreateAccountResponse> responseEntity;
+        ObjectMapper mapper = new ObjectMapper();
+        List<JsonNode> listNode = null;
         try {
-            String url = amBaseUri + "/" + account.getDomaine() + CREATE_SUFFIXE_URL;
-            responseEntity = restTemplate.postForEntity(url, request, AMCreateAccountResponse.class);
-        } catch (RestClientException exception) {
-            log.error("", exception);
-            throw new CreateAccountError();
+            JsonNode rootNode = mapper.readTree(response);
+            listNode = rootNode.findValues("data");
+
+        } catch (IOException e) {
+            throw new CreateAccountError(e.getMessage());
+        }
+        for (Iterator i = listNode.get(0).iterator(); i.hasNext(); ) {
+            JsonNode user = (JsonNode) i.next();
+            log.info(user.asText());
+            if (user.path("username").asText().equals(userName)) {
+                return true;
+            }
         }
 
 
-        return Optional.ofNullable(responseEntity.getBody().getId())
-                .orElseThrow(CreateAccountError::new);
+        return false;
+    }
 
+
+    @Override
+    public String createAccount(String domaine, String username, String idpId, String email, String firstName, String lastName, HashMap<String, Object> additionalInformation) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+
+        io.gravitee.am.service.model.NewUser amCreateAccountRequest = new io.gravitee.am.service.model.NewUser();
+        amCreateAccountRequest.setUsername(username);
+        amCreateAccountRequest.setEmail(email);
+        amCreateAccountRequest.setFirstName(firstName);
+        amCreateAccountRequest.setLastName(lastName);
+        amCreateAccountRequest.setDomain(domaine);
+        amCreateAccountRequest.setSource(idpId);
+        amCreateAccountRequest.setPreRegistration(true);
+        amCreateAccountRequest.setAdditionalInformation(additionalInformation);
+
+        HttpEntity<io.gravitee.am.service.model.NewUser> request = new HttpEntity<>(amCreateAccountRequest, headers);
+
+        ResponseEntity<String> responseEntity;
+        try {
+            String url = amServiceConfiguration.getAmManagementBaseUri() + "management/domains/" + domaine + "/users";
+            responseEntity = restTemplate.postForEntity(url, request, String.class);
+        } catch (RestClientException exception) {
+
+            log.error("Erreur lors de l'appel à AM", exception);
+            throw new CreateAccountError(exception.getMessage());
+        }
+
+        if (responseEntity.getStatusCode() == HttpStatus.CREATED) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                JsonNode rootNode = mapper.readTree(responseEntity.getBody());
+                JsonNode idNode = rootNode.path("id");
+                return idNode.asText();
+            } catch (IOException e) {
+                throw new CreateAccountError(e.getMessage());
+            }
+        } else {
+            throw new CreateAccountError(responseEntity.getStatusCode().value(), responseEntity.getBody());
+        }
 
     }
 
@@ -86,18 +136,9 @@ public class AMAccountServiceImpl implements AccountService {
         return false;
     }
 
-    @Override
-    public boolean existsAccount(String domaine, String email) {
-        return false;
-    }
 
     @Override
-    public Account updateAccount(String domaine, String email, String name, String firstName) {
+    public Boolean findByEmail(String domaine, String email) {
         return null;
-    }
-
-    @Override
-    public Optional<Account> findById(String id) {
-        return Optional.empty();
     }
 }

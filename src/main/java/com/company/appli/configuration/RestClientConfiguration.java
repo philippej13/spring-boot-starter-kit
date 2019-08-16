@@ -19,6 +19,10 @@ public class RestClientConfiguration {
     @Autowired
     ServiceRequestInterceptor serviceRequestInterceptor;
 
+    /**
+     * Un RestTemplate avec intercepteur et handler
+     * @return
+     */
     @Bean
     @Qualifier("restTemplateAM")
     public RestTemplate restTemplateAM() {
@@ -33,6 +37,16 @@ public class RestClientConfiguration {
         restTemplate.setInterceptors(interceptors);
         restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
         return restTemplate;
+    }
+
+    /**
+     * Un RestTemplate classique
+     * @return
+     */
+    @Bean
+    @Qualifier("restTemplate")
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 

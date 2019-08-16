@@ -2,7 +2,7 @@ package com.company.appli.controller;
 
 import com.company.appli.model.AccountCreateRequest;
 import com.company.appli.model.Account;
-import com.company.appli.service.AccountService;
+import com.company.appli.service.LocalAccountService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -27,7 +27,7 @@ public class AccountController {
 
     @Autowired
     @Qualifier("localService")
-    AccountService accountService;
+    LocalAccountService accountService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/accounts/{domaine}/{id}")
     public ResponseEntity<Account> getAccount(@PathVariable String domaine, @PathVariable String id) {
