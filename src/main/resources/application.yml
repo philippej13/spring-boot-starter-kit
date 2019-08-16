@@ -43,6 +43,7 @@ spring:
       virtualHost: /
       listener:
         simple:
+          prefetch: 5
           default-requeue-rejected: true
           retry:
             enabled: false
