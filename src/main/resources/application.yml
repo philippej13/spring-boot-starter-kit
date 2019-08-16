@@ -34,10 +34,26 @@ spring:
     application:
       name: amadmin
     #RabbitMQ properties
-    rabbitmq.host: localhost
-    rabbitmq.port: 5672
-    rabbitmq.username: guest
-    rabbitmq.password: guest
+    rabbitmq:
+      #addresses: fra-vsr-29378,fra-vsr-29379
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
+      virtualHost: /
+      listener:
+        simple:
+          default-requeue-rejected: true
+          retry:
+            enabled: false
+            initial-interval: 2000
+            max-attempts: 2
+            multiplier: 1.5
+            max-interval: 500
+
+    #MongoDB properties
     data.mongodb:
       #uri: mongodb://user:password@host1:27017/starterkit?authSource=starterkit&ssl=false
       uri: mongodb://guest:guest@localhost:27017/starterkit
+
+
