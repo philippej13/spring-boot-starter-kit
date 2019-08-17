@@ -32,7 +32,7 @@ logging:
 
 spring:
     application:
-      name: amadmin
+      name: spring-boot-starter-kit
     #RabbitMQ properties
     rabbitmq:
       #addresses: fra-vsr-29378,fra-vsr-29379
@@ -57,4 +57,12 @@ spring:
       #uri: mongodb://user:password@host1:27017/starterkit?authSource=starterkit&ssl=false
       uri: mongodb://guest:guest@localhost:27017/starterkit
 
-
+    data.elasticsearch:
+      urls:
+        - http://localhost:9200
+        #- http://localhost:9201
+      connecttimeout: 5000
+      sockettimeout: 60000
+      index: account
+      username: username
+      password: password

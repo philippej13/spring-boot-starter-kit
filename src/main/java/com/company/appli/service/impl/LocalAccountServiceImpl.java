@@ -1,7 +1,10 @@
 package com.company.appli.service.impl;
 
 import com.company.appli.model.Account;
-import com.company.appli.repository.AccountRepository;
+import com.company.appli.repository.AccountRepositoryCustom;
+import com.company.appli.repository.elasticsearch.AccountElasticsearchRepository;
+import com.company.appli.repository.elasticsearch.AccountElasticsearchRepositoryImpl;
+import com.company.appli.repository.mongodb.AccountMongoRepository;
 import com.company.appli.service.LocalAccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +19,23 @@ import java.util.Optional;
 @Qualifier("localService")
 public class LocalAccountServiceImpl implements LocalAccountService {
 
-    AccountRepository accountRepository;
+    AccountRepositoryCustom accountMongoRepository;
+    AccountRepositoryCustom accountElasticsearchRepository;
 
     @Autowired
-    public LocalAccountServiceImpl(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public LocalAccountServiceImpl(@Qualifier("mongoRepository") AccountRepositoryCustom accountMongoRepository, @Qualifier("elasticsearchRepository") AccountRepositoryCustom accountElasticsearchRepository) {
+        this.accountMongoRepository = accountMongoRepository;
+        this.accountElasticsearchRepository = accountElasticsearchRepository;
     }
 
     @Override
     public String createAccount(Account account) {
-        Account result = accountRepository.save(account);
+        //Création dans Mongo
+        log.info("Insertion dans Mongo");
+        Account result = accountMongoRepository.insertAccount(account);
+        //Création dans ES
+        log.info("Insertion dans Elasticsearch");
+        accountElasticsearchRepository.insertAccount(account);
         return result.getId();
     }
 
@@ -41,12 +51,12 @@ public class LocalAccountServiceImpl implements LocalAccountService {
 
     @Override
     public Account findByEmail(String domaine, String email) {
-        return accountRepository.findByEmail(domaine, email);
+        return accountMongoRepository.findByEmail(domaine, email);
     }
 
     @Override
     public List<Account> findAllByDomaine(String domaine) {
-        return accountRepository.findAllByDomaine(domaine);
+        return accountMongoRepository.findAllByDomaine(domaine);
     }
 
     @Override
@@ -56,6 +66,6 @@ public class LocalAccountServiceImpl implements LocalAccountService {
 
     @Override
     public Optional<Account> findById(String id) {
-        return accountRepository.findById(id);
+        return accountMongoRepository.findById(id);
     }
 }

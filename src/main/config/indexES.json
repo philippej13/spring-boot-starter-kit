@@ -1,0 +1,14 @@
+{
+  "settings" : {
+    "number_of_shards" : 1
+  },
+  "mappings" : {
+    "properties" : {
+      "id" : { "type" : "text" },
+      "domaine" : { "type" : "text" },
+      "email" : { "type" : "text" },
+      "nom" : { "type" : "text" },
+      "prenom" : { "type" : "text" }
+    }
+  }
+}

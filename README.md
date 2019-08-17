@@ -1,4 +1,4 @@
-# spring-boot-starter-kiy
+# spring-boot-starter-kit
 
 * Springboot
 * Swagger (springfox)
@@ -7,12 +7,15 @@
     - ResponseErrorHandler
 * RabbitMQ
 * Spring security with Oauth
-* MongoDB 
+* MongoDB
+* Elasticsearch  
 
 TODO
-* Elasticsearch 
+
 * Script de création de file
-* script de cration de bdd mongo
+* Logger
+* Mock
+* JUnit
 --------------------------------------------
 
 Run Rabbit + Create queue + Publish Message
@@ -40,6 +43,11 @@ mongo localhost:27017/starterkit /home/philippe/GIT/spring-boot-starter-kit/src/
 ```
 
 -------------------------
+Lancement d'un elasticsearch
+```
+docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.3.0
+```
+
 
 Swagger URL : [http://localhost:8080/swagger-ui.html]
 

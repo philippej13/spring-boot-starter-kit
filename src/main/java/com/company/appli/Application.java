@@ -1,13 +1,13 @@
 package com.company.appli;
 
-import com.company.appli.repository.AccountRepositoryCustom;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+//@EnableMongoRepositories("com.company.appli.repository.mongodb")
+//@EnableElasticsearchRepositories("com.company.appli.repository.elasticsearch")
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 

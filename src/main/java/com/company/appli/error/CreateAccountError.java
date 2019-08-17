@@ -8,6 +8,10 @@ public class CreateAccountError extends Error {
         super(message);
     }
 
+    public CreateAccountError(Throwable throwable) {
+        super(throwable);
+    }
+
     public CreateAccountError(int erroCode, String errorMessage) {
         this.errorCode = erroCode;
         this.errorMessage = errorMessage;
