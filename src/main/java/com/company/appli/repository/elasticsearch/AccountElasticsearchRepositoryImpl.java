@@ -27,14 +27,16 @@ public class AccountElasticsearchRepositoryImpl implements AccountRepositoryCust
     @Autowired
     ElasticSearchConfiguration elasticSearchConfiguration;
 
+
+    // Depuis la 2.1.7, Autoconfigure met à dispo un RestHighLevelClient (avec elasticsearc.rest.* pour la config)
+    // et le @Qualifier("elasticsearchRestHighLevelClient")
+    // Mais on garde le notre car il y a la gestion du proxy
+    @Autowired
+    @Qualifier("elasticSearchConfiguration")
     private RestHighLevelClient restHighLevelClient;
+    @Autowired
     private ObjectMapper objectMapper;
 
-
-    public AccountElasticsearchRepositoryImpl(ObjectMapper objectMapper ,RestHighLevelClient restHighLevelClient) {
-        this.objectMapper = objectMapper;
-        this.restHighLevelClient = restHighLevelClient;
-    }
 
     @Override
     public Account findByEmail(String domaine, String email) {

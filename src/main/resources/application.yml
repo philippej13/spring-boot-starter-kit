@@ -66,3 +66,4 @@ spring:
       index: account
       username: username
       password: password
+
