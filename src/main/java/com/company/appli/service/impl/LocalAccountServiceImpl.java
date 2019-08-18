@@ -19,23 +19,24 @@ import java.util.Optional;
 @Qualifier("localService")
 public class LocalAccountServiceImpl implements LocalAccountService {
 
+   /* @Autowired
+    @Qualifier("mongoRepository")
     AccountRepositoryCustom accountMongoRepository;
-    AccountRepositoryCustom accountElasticsearchRepository;
 
     @Autowired
-    public LocalAccountServiceImpl(@Qualifier("mongoRepository") AccountRepositoryCustom accountMongoRepository, @Qualifier("elasticsearchRepository") AccountRepositoryCustom accountElasticsearchRepository) {
-        this.accountMongoRepository = accountMongoRepository;
-        this.accountElasticsearchRepository = accountElasticsearchRepository;
-    }
+    @Qualifier("elasticsearchRepository")
+    AccountRepositoryCustom accountElasticsearchRepository;
+*/
+    @Autowired
+    @Qualifier("accountRepositoryFactory")
+    AccountRepositoryCustom accountRepository;
 
     @Override
     public String createAccount(Account account) {
         //Création dans Mongo
-        log.info("Insertion dans Mongo");
-        Account result = accountMongoRepository.insertAccount(account);
-        //Création dans ES
-        log.info("Insertion dans Elasticsearch");
-        accountElasticsearchRepository.insertAccount(account);
+        log.info("Insertion dans en base");
+        Account result = accountRepository.insertAccount(account);
+
         return result.getId();
     }
 
@@ -51,12 +52,12 @@ public class LocalAccountServiceImpl implements LocalAccountService {
 
     @Override
     public Account findByEmail(String domaine, String email) {
-        return accountMongoRepository.findByEmail(domaine, email);
+        return accountRepository.findByEmail(domaine, email);
     }
 
     @Override
     public List<Account> findAllByDomaine(String domaine) {
-        return accountMongoRepository.findAllByDomaine(domaine);
+        return accountRepository.findAllByDomaine(domaine);
     }
 
     @Override
@@ -66,6 +67,6 @@ public class LocalAccountServiceImpl implements LocalAccountService {
 
     @Override
     public Optional<Account> findById(String id) {
-        return accountMongoRepository.findById(id);
+        return accountRepository.findById(id);
     }
 }

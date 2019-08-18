@@ -1,6 +1,7 @@
 package com.company.appli.configuration;
 
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -13,6 +14,7 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,7 +24,8 @@ import java.util.List;
 
 @Configuration
 @ConfigurationProperties("spring.data.elasticsearch")
-@Log
+@Slf4j
+@ConditionalOnProperty(name = "repository.elasticsearch.active", havingValue = "true")
 public class ElasticSearchConfiguration extends AbstractFactoryBean {
 
     //@Value("${spring.data.elasticsearch.urls}")

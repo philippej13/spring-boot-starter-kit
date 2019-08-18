@@ -68,3 +68,11 @@ spring:
       password: password
 
 logging.config: src/main/resources/logback.xml
+
+#Choix de la base de données (mongo / elasticsearch) - Conditonal Beans
+repository.mongo.active: true
+repository.elasticsearch.active: false
+
+repository.localAccount.repository.impl: com.company.appli.repository.mongodb.AccountMongoRepositoryImpl
+#repository.localAccount.repository.impl: com.company.appli.repository.elasticsearch.AccountElasticsearchRepositoryImpl
+

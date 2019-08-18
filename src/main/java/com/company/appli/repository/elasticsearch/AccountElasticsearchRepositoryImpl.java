@@ -13,6 +13,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Repository
 @Slf4j
 @Qualifier("elasticsearchRepository")
+@ConditionalOnProperty(name = "repository.elasticsearch.active", havingValue = "true")
 public class AccountElasticsearchRepositoryImpl implements AccountRepositoryCustom {
 
     @Autowired
