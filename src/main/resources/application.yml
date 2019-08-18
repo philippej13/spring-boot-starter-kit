@@ -67,3 +67,4 @@ spring:
       username: username
       password: password
 
+logging.config: src/main/resources/logback.xml

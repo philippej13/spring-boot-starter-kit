@@ -13,7 +13,7 @@
 TODO
 
 * Script de création de file
-* Logger
+* Logger différent pour les entrées/sortie (HTTP)
 * Mock
 * JUnit
 --------------------------------------------
