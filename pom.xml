@@ -25,6 +25,7 @@
         <!-- <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version> -->
         <lombok.version>1.18.8</lombok.version>
         <elasticsearch.version>7.3.0</elasticsearch.version>
+        <junit.jupiter.version>5.5.1</junit.jupiter.version>
         <skipITs>true</skipITs>
     </properties>
 
@@ -112,6 +113,25 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- Junit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- exclude junit 4 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

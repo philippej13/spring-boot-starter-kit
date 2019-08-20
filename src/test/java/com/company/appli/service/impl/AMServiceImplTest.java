@@ -2,9 +2,9 @@ package com.company.appli.service.impl;
 
 import com.company.appli.model.AMCreateAccountResponse;
 import com.company.appli.model.Account;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -13,7 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -27,14 +28,14 @@ public class AMServiceImplTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Before
+    @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
 
     //TODO : Test à réécrire
     @Test
-    @Ignore
+    @Disabled
     public void createAccount_ok() {
         String id = "5";
         //amService.amBaseUri = "http://gravitee-am:8092/";

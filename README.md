@@ -9,13 +9,16 @@
 * Spring security with Oauth
 * MongoDB
 * Elasticsearch  
+* Junit 5
 
 TODO
 
 * Script de création de file
 * Logger différent pour les entrées/sortie (HTTP)
 * Mock
-* JUnit
+* JUnit avec Init DB
+* Docker compose
+* Cache
 --------------------------------------------
 
 Run Rabbit + Create queue + Publish Message
@@ -28,7 +31,7 @@ docker exec -it 69731352de2b rabbitmqadmin publish routing_key=queueTest payload
 Login IHM Rabit guest/guest
 
 --------------------------------------
-Lancement di serveur MongoDB 
+Lancement du serveur MongoDB 
 ```
 docker run -d -p 27017:27017 -v /home/philippe/Documents/mongodb/data4:/data/db mongo:4.0.9
 ```

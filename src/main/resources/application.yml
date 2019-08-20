@@ -76,3 +76,5 @@ repository.elasticsearch.active: false
 repository.localAccount.repository.impl: com.company.appli.repository.mongodb.AccountMongoRepositoryImpl
 #repository.localAccount.repository.impl: com.company.appli.repository.elasticsearch.AccountElasticsearchRepositoryImpl
 
+#Active le messageListener (@ConditionalOnProperty)
+rabbitmq.listener.active: true

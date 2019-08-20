@@ -17,7 +17,11 @@ security:
 
 #Access Management Admin
 am:
-  baseUri: http://gravitee-am:8092/
+  management:
+    baseUri: http://localhost:8093/
+    adminLogin: admin
+    adminPassword: admin_int
+
 
 logging:
   level:
@@ -28,8 +32,49 @@ logging:
 
 spring:
     application:
-      name: amadmin
-    rabbitmq.host: localhost
-    rabbitmq.port: 5672
-    rabbitmq.username: guest
-    rabbitmq.password: guest
+      name: spring-boot-starter-kit
+    #RabbitMQ properties
+    rabbitmq:
+      #addresses: fra-vsr-29378,fra-vsr-29379
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
+      virtualHost: /
+      listener:
+        simple:
+          prefetch: 5
+          default-requeue-rejected: true
+          retry:
+            enabled: false
+            initial-interval: 2000
+            max-attempts: 2
+            multiplier: 1.5
+            max-interval: 500
+
+    #MongoDB properties
+    data.mongodb:
+      #uri: mongodb://user:password@host1:27017/starterkit?authSource=starterkit&ssl=false
+      uri: mongodb://guest:guest@localhost:27017/starterkit
+
+    data.elasticsearch:
+      urls:
+        - http://localhost:9200
+        #- http://localhost:9201
+      connecttimeout: 5000
+      sockettimeout: 60000
+      index: account
+      username: username
+      password: password
+
+logging.config: src/main/resources/logback.xml
+
+#Choix de la base de données (mongo / elasticsearch) - Conditonal Beans
+repository.mongo.active: true
+repository.elasticsearch.active: false
+
+repository.localAccount.repository.impl: com.company.appli.repository.mongodb.AccountMongoRepositoryImpl
+#repository.localAccount.repository.impl: com.company.appli.repository.elasticsearch.AccountElasticsearchRepositoryImpl
+
+#Active le messageListener (@ConditionalOnProperty)
+rabbitmq.listener.active: false
