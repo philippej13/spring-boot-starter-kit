@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +38,7 @@ public class AccountMongoRepositoryImpl implements AccountRepositoryCustom {
         return mongoTemplate.find(query, Account.class);
     }
 
+    @Cacheable("accounts")
     public Account findByEmail(String domaine, String email) {
         Query query = new Query();
         query.addCriteria(Criteria.where("email").is(email).and("domaine").is(domaine));

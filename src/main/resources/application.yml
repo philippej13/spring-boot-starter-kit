@@ -29,6 +29,8 @@ logging:
     #org.springframework.security: debug
     #org.springframework.web-security: debug
     org.springframework: error
+    org.springframework.data.mongodb.core.MongoTemplate: debug
+    org.springframework.cache: trace
 
 spring:
     application:
@@ -71,7 +73,7 @@ logging.config: src/main/resources/logback.xml
 
 #Choix de la base de données (mongo / elasticsearch) - Conditonal Beans
 repository.mongo.active: true
-repository.elasticsearch.active: false
+repository.elasticsearch.active: true
 
 repository.localAccount.repository.impl: com.company.appli.repository.mongodb.AccountMongoRepositoryImpl
 #repository.localAccount.repository.impl: com.company.appli.repository.elasticsearch.AccountElasticsearchRepositoryImpl

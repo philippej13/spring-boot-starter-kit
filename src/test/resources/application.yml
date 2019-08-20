@@ -29,6 +29,8 @@ logging:
     #org.springframework.security: debug
     #org.springframework.web-security: debug
     org.springframework: error
+    org.springframework.data.mongodb.core.MongoTemplate: debug
+    org.springframework.cache: trace
 
 spring:
     application:
@@ -68,6 +70,10 @@ spring:
       password: password
 
 logging.config: src/main/resources/logback.xml
+
+spring.jpa.show-sql: true
+spring.jpa.properties.hibernate.format_sql: true
+
 
 #Choix de la base de données (mongo / elasticsearch) - Conditonal Beans
 repository.mongo.active: true

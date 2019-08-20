@@ -2,11 +2,15 @@ package com.company.appli.controller;
 
 import com.company.appli.model.AccountCreateRequest;
 import com.company.appli.model.Account;
+import com.company.appli.repository.AccountRepositoryCustom;
+import com.company.appli.repository.mongodb.AccountMongoRepository;
+import com.company.appli.repository.mongodb.AccountMongoRepositoryImpl;
 import com.company.appli.service.LocalAccountService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -22,6 +26,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("/api/security/admin")
 public class AccountController {
 
@@ -52,7 +57,7 @@ public class AccountController {
             @ApiResponse(code = 401, message = "Non authentifié"),
             @ApiResponse(code = 403, message = "Non authorisé")})
     public ResponseEntity<Object> createAccount(@RequestBody AccountCreateRequest accountCreateRequest, HttpServletRequest request) {
-        System.out.println(accountCreateRequest);
+        log.debug(accountCreateRequest.toString());
         ///Creation du compte
 
         Account account = new Account(UUID.randomUUID().toString(), accountCreateRequest.getDomaine(),

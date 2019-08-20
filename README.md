@@ -10,6 +10,7 @@
 * MongoDB
 * Elasticsearch  
 * Junit 5
+* Cache
 
 TODO
 
@@ -18,7 +19,7 @@ TODO
 * Mock
 * JUnit avec Init DB
 * Docker compose
-* Cache
+
 --------------------------------------------
 
 Run Rabbit + Create queue + Publish Message
