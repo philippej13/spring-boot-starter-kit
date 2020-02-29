@@ -78,3 +78,8 @@ POST http://localhost:8080/api/security/admin/accounts
 ```
 mvn spring-boot:run
 ```
+
+## Rabbit MQ / Spring Boot : Hqndling Errors/Exception and confiugration
+
+https://docs.google.com/document/d/1I2cHdSN9Ch2C8E2qtFYjNwONR1gilVdaRgBCeK67FlE/edit?usp=sharing
+
