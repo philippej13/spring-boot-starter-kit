@@ -11,14 +11,17 @@
 * Elasticsearch  
 * Junit 5
 * Cache
+* Docker
 
 TODO
 
-* Script de création de file
+* Script de création de file JMS
 * Logger différent pour les entrées/sortie (HTTP)
 * Mock
 * JUnit avec Init DB
 * Docker compose
+* Skaffold
+* Deploiement Kubernetes
 
 --------------------------------------------
 
@@ -83,3 +86,17 @@ mvn spring-boot:run
 
 https://docs.google.com/document/d/1I2cHdSN9Ch2C8E2qtFYjNwONR1gilVdaRgBCeK67FlE/edit?usp=sharing
 
+Erreurs :
+Si le message d'erreur suivant apparaît : "Bean method 'buildProperties' in 'ProjectInfoAutoConfiguration' not loaded because @ConditionalOnResource did not find resource '${spring.info.build.location:classpath:META-INF/build-info.properties}'"
+Faire un mvn package
+
+
+#Build image Docker
+docker build -f docker/Dockerfile -t spring-boot-starterkit:0.0.1 .
+
+# Run in docker
+# Les fichiers de configuration de l'application et l'emplacements des log sont externalisés
+# Les volumes /app/logs et /app/config existent pour cela
+# La variable LOGGING_CONFIG doit être surchagée
+
+docker run -p 8083:8083 -it -e LOGGING_CONFIG=/app/config/logback.xml -v /home/linux/Documents/GIT/spring-boot-starter-kit/src/main/resources:/app/config:ro -v  /tmp/logs:/app/logs spring-boot-starterkit
