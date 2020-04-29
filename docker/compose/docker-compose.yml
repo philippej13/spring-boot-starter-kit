@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  starter-kit:
+    image: spring-boot-starterkit:0.0.1
+    environment:
+      LOGGING_CONFIG: /app/config/logback.xml
+    volumes:
+      - ../../src/main/resources:/app/config:ro
+      - /tmp/logs:/app/logs
+    #depends_on:
+    # Use wait-for-it for startup order
+      - mongo-db-server
+      - rabbitmq-server
+      - es-server
+
+  mongo-db-server:
+    image: mongo:4.0
+    environment:
+      MONGO_INITDB_DATABASE: starterkit
+    volumes:
+    - /tmp/mongodb/data4:/data/db
+    - ../../src/main/config/mongo/initMongoDB.js:/docker-entrypoint-initdb.d/initMongoDB.js
+
+  rabbitmq-server:
+    image: rabbitmq:3.8.3-management
+    #environment:
+    #  RABBITMQ_DEFAULT_VHOST: /vhost1
+    volumes:
+      - ../../src/main/config/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ../../src/main/config/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+
+  es-server:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.0
+    environment:
+      discovery.type: single-node

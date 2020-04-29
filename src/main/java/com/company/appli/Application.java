@@ -10,6 +10,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.net.InetAddress;
+
 //@EnableMongoRepositories("com.company.appli.repository.mongodb")
 //@EnableElasticsearchRepositories("com.company.appli.repository.elasticsearch")
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
@@ -23,6 +25,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("------------Démarrage de l'application-----------");
+        System.out.println("IP : " + InetAddress.getLocalHost().getHostAddress());
     }
 
 

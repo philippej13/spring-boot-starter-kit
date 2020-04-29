@@ -12,14 +12,14 @@
 * Junit 5
 * Cache
 * Docker
+* Docker compose
 
 TODO
 
 * Script de création de file JMS
 * Logger différent pour les entrées/sortie (HTTP)
-* Mock
+* Mock / WireMock
 * JUnit avec Init DB
-* Docker compose
 * Skaffold
 * Deploiement Kubernetes
 
@@ -28,11 +28,11 @@ TODO
 Run Rabbit + Create queue + Publish Message
 
 ```
-docker run -d --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
-docker exec -it 69731352de2b rabbitmqadmin declare queue --vhost=/ name=queueTest durable=true
-docker exec -it 69731352de2b rabbitmqadmin publish routing_key=queueTest payload="test"
+docker run -d --hostname my-rabbit -e RABBITMQ_DEFAULT_VHOST=vhost1 -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+docker exec -it 69731352de2b rabbitmqadmin declare queue --vhost=/vhost1 name=queueTest durable=true
+docker exec -it bbc0455e572d rabbitmqadmin publish routing_key=queueTest payload="test" --vhost=/vhost1
 ```
-Login IHM Rabit guest/guest
+Login IHM RabbitMQ guest/guest
 
 --------------------------------------
 Lancement du serveur MongoDB 
@@ -54,7 +54,7 @@ Lancement d'un elasticsearch
 ```
 docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.3.0
 ```
-
+Index : http://es-server:9200/account/_search
 
 Swagger URL : [http://localhost:8080/swagger-ui.html]
 
@@ -82,7 +82,7 @@ POST http://localhost:8080/api/security/admin/accounts
 mvn spring-boot:run
 ```
 
-## Rabbit MQ / Spring Boot : Hqndling Errors/Exception and confiugration
+## Rabbit MQ / Spring Boot : Handling Errors/Exception and configuration
 
 https://docs.google.com/document/d/1I2cHdSN9Ch2C8E2qtFYjNwONR1gilVdaRgBCeK67FlE/edit?usp=sharing
 
@@ -92,11 +92,21 @@ Faire un mvn package
 
 
 #Build image Docker
+```
 docker build -f docker/Dockerfile -t spring-boot-starterkit:0.0.1 .
-
+```
 # Run in docker
-# Les fichiers de configuration de l'application et l'emplacements des log sont externalisés
-# Les volumes /app/logs et /app/config existent pour cela
-# La variable LOGGING_CONFIG doit être surchagée
+Les fichiers de configuration de l'application et l'emplacements des log sont externalisés
+Les volumes /app/logs et /app/config existent pour cela
+La variable LOGGING_CONFIG doit être surchagée
 
+```
 docker run -p 8083:8083 -it -e LOGGING_CONFIG=/app/config/logback.xml -v /home/linux/Documents/GIT/spring-boot-starter-kit/src/main/resources:/app/config:ro -v  /tmp/logs:/app/logs spring-boot-starterkit
+```
+
+#Run with docker-compose
+
+```
+cd docker/compose
+docker-compose up
+```
