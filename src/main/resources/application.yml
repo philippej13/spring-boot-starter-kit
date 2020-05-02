@@ -80,3 +80,6 @@ repository.localAccount.repository.impl: com.company.appli.repository.mongodb.Ac
 
 #Active le messageListener (@ConditionalOnProperty)
 rabbitmq.listener.active: true
+
+management.endpoints.web.exposure.include: "*"
+management.endpoint.shutdown.enabled: true
