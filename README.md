@@ -13,6 +13,7 @@
 * Cache
 * Docker
 * Docker compose
+* Déploiement dans Kubernetes dans un cluster multipass
 
 TODO
 
@@ -21,7 +22,6 @@ TODO
 * Mock / WireMock
 * JUnit avec Init DB
 * Skaffold
-* Deploiement Kubernetes
 
 --------------------------------------------
 
@@ -109,4 +109,30 @@ docker run -p 8083:8083 -it -e LOGGING_CONFIG=/app/config/logback.xml -v /home/l
 ```
 cd docker/compose
 docker-compose up
+```
+
+
+##Kubernetes
+Deux exemples pour gérer la configuration 
+
+#Directement avec les fichiers de configuratons (application.yml et logback.xml)
+Dans l'exemple de déploiement (deploy-without-configMap), il s'agit d'utiliser un intiContainer pour faire un git afin de récupérer les fichiers et de les monter dans un volume du container.
+
+
+#Création de du configMap avec les deux fichiers de configuration (application.yml et logback.xml)
+``` 
+kubectl create configmap spring-boot-starter-kit-config --from-file=src/main/resources/logback.xml --from-file=src/main/resources/application.yml
+```
+
+Et "montage" du configMap dans un volume 
+```
+          envFrom:   # <- Magic happens here
+            - configMapRef:
+                name: spring-boot-starter-kit-config
+...
+...
+      volumes:
+        - name: config-volume
+          configMap:
+            name: spring-boot-starter-kit-config 
 ```

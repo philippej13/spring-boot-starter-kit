@@ -1,0 +1,64 @@
+---
+# Service (Cluster IP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-starter-kit-service
+spec:
+  selector:
+    app: spring-boot-starter-kit
+  #type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8083
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-starter-kit-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-starter-kit
+  template:
+    metadata:
+      labels:
+        app: spring-boot-starter-kit
+    spec:
+      containers:
+        - name: spring-boot-starter-kit
+          image: philippej13/my-starterkit:0.0.1
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          ports:
+            - containerPort: 8083
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: spring-boot-starter-kit-config
+          env:
+            #To override the property logging.config in application.yml
+            - name: LOGGING_CONFIG
+              value: "/app/config/logback.xml"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: spring-boot-starter-kit-config
+---
+# Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: spring-boot-starter-kit-ingress-1
+spec:
+  rules:
+    - host: spring-boot-starter-kit.10.112.40.134.nip.io
+      http:
+        paths:
+          - backend:
+              serviceName: spring-boot-starter-kit-service
+              servicePort: 80
+
