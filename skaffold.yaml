@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta3
+kind: Config
+metadata:
+  name: spring-boot-starter-kit
+build:
+  artifacts:
+  #- image: philippej13/my-starterkit
+  - image: 192.168.0.10:5000/spring-boot-starter-kit-build
+    jib: {}
+    context: .
+    #docker:
+    #  dockerfile: docker/Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    #- kubernetes/deploy-without-configMap.yml
+    - kubernetes/deploy.yml

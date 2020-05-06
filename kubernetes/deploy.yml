@@ -29,7 +29,9 @@ spec:
     spec:
       containers:
         - name: spring-boot-starter-kit
-          image: philippej13/my-starterkit:0.0.1
+          #image: philippej13/my-starterkit:0.0.1
+          #image: philippej13/spring-boot-starter-kit-build
+          image: 192.168.0.10:5000/spring-boot-starter-kit-build
           volumeMounts:
             - name: config-volume
               mountPath: /app/config

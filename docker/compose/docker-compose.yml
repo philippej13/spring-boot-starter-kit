@@ -2,13 +2,13 @@ version: '3.3'
 
 services:
   starter-kit:
-    image: spring-boot-starterkit:0.0.1
+    image: localhost:5000/spring-boot-starter-kit-build
     environment:
       LOGGING_CONFIG: /app/config/logback.xml
     volumes:
       - ../../src/main/resources:/app/config:ro
       - /tmp/logs:/app/logs
-    #depends_on:
+    depends_on:
     # Use wait-for-it for startup order
       - mongo-db-server
       - rabbitmq-server

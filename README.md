@@ -6,6 +6,7 @@
     - Intercepteur
     - ResponseErrorHandler
 * RabbitMQ
+* Configuration du vhost et de la file JMS RabbitMq à l'initialisation du container
 * Spring security with Oauth
 * MongoDB
 * Elasticsearch  
@@ -14,14 +15,15 @@
 * Docker
 * Docker compose
 * Déploiement dans Kubernetes dans un cluster multipass
+* Skaffold & Jib
 
 TODO
 
-* Script de création de file JMS
 * Logger différent pour les entrées/sortie (HTTP)
 * Mock / WireMock
 * JUnit avec Init DB
-* Skaffold
+* Secret
+
 
 --------------------------------------------
 
@@ -93,7 +95,7 @@ Faire un mvn package
 
 #Build image Docker
 ```
-docker build -f docker/Dockerfile -t spring-boot-starterkit:0.0.1 .
+docker build -f docker/Dockerfile -t spring-boot-starter-kit:0.0.1 .
 ```
 # Run in docker
 Les fichiers de configuration de l'application et l'emplacements des log sont externalisés
@@ -101,7 +103,7 @@ Les volumes /app/logs et /app/config existent pour cela
 La variable LOGGING_CONFIG doit être surchagée
 
 ```
-docker run -p 8083:8083 -it -e LOGGING_CONFIG=/app/config/logback.xml -v /home/linux/Documents/GIT/spring-boot-starter-kit/src/main/resources:/app/config:ro -v  /tmp/logs:/app/logs spring-boot-starterkit
+docker run -p 8083:8083 -it -e LOGGING_CONFIG=/app/config/logback.xml -v /home/linux/Documents/GIT/spring-boot-starter-kit/src/main/resources:/app/config:ro -v  /tmp/logs:/app/logs spring-boot-starter-kit-build
 ```
 
 #Run with docker-compose
@@ -136,3 +138,36 @@ Et "montage" du configMap dans un volume
           configMap:
             name: spring-boot-starter-kit-config 
 ```
+
+
+
+#Run a local registry
+docker volume create local_registry
+docker container run -d --name registry.local -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
+
+##Dans le cluster K3s
+Edit file /etc/rancher/k3s/registries.yaml
+```
+mirrors:
+  "192.168.0.10:5000":
+    endpoint:
+      - "http://192.168.0.10:5000"
+```
+Restart K3s 
+
+```
+sudo service k3s restart
+```
+
+##Sur la machine local (permet de faire un docker push)
+Dans fichier /etc/docker/daemon.json
+```json
+{
+  "insecure-registries" : ["myregistrydomain.com:5000"]
+}
+```
+Puis restart du service docker
+```
+sudo service docker restart
+```
+#Skaffold
