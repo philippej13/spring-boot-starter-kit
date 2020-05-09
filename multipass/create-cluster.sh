@@ -1,7 +1,8 @@
 #!/bin/sh
+#Source from k33g
 eval $(cat cluster.config)
 
-multipass launch -n ${node1_name} --cpus 2 --mem 2G
+multipass launch -n ${node1_name} --cpus 2 --mem 2G -d 8G
 multipass launch -n ${node2_name} --cpus 2 --mem 2G
 multipass launch -n ${node3_name} --cpus 2 --mem 2G
 
@@ -39,4 +40,22 @@ echo "😃 ${node3_name} has joined the Cluster  ✅"
 
 multipass exec ${node1_name} sudo cat /etc/rancher/k3s/k3s.yaml > k3s.yaml
 
+echo "Copy custom registries.yaml to all nodes"
+multipass transfer registries.yaml ${node1_name}:
+multipass exec ${node1_name} sudo mv registries.yaml /etc/rancher/k3s
+multipass exec ${node1_name} sudo service k3s restart
+
+multipass transfer registries.yaml ${node2_name}:
+multipass exec ${node2_name} sudo mv registries.yaml /etc/rancher/k3s
+multipass exec ${node2_name} sudo service k3s restart
+
+multipass transfer registries.yaml ${node3_name}:
+multipass exec ${node3_name} sudo mv registries.yaml /etc/rancher/k3s
+multipass exec ${node3_name} sudo service k3s restart
+
 sed -i  "s/127.0.0.1/$IP/" k3s.yaml
+
+CLUSTER_IP=$(multipass info basestar | grep IPv4 | awk '{print $2}')
+echo "IP basestar : $CLUSTER_IP"
+
+echo "Done"

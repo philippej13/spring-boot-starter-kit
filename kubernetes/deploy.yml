@@ -12,6 +12,37 @@ spec:
     - port: 80
       targetPort: 8083
 ---
+# Service (Cluster IP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-server-service
+spec:
+  selector:
+    app: spring-boot-starter-kit
+  #type: ClusterIP
+  ports:
+    - name: rabbit-port
+      port: 5672
+      targetPort: 5672
+    - name: rabbit-magt-port
+      port: 15672
+      targetPort: 15672
+
+---
+# Service (Cluster IP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db-server-service
+spec:
+  selector:
+    app: spring-boot-starter-kit
+  #type: ClusterIP
+  ports:
+    - port: 27017
+      targetPort: 27017
+---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -30,10 +61,10 @@ spec:
       containers:
         - name: spring-boot-starter-kit
           #image: philippej13/my-starterkit:0.0.1
-          #image: philippej13/spring-boot-starter-kit-build
-          image: 192.168.0.10:5000/spring-boot-starter-kit-build
+          #image: philippej13/spring-boot-starter-kit
+          image: 192.168.0.10:5000/spring-boot-starter-kit
           volumeMounts:
-            - name: config-volume
+            - name: config-volume-spring-boot
               mountPath: /app/config
           ports:
             - containerPort: 8083
@@ -45,8 +76,19 @@ spec:
             #To override the property logging.config in application.yml
             - name: LOGGING_CONFIG
               value: "/app/config/logback.xml"
+        - name: rabbitmq-server
+          image: 192.168.0.10:5000/starter-kit-rabbitmq
+          ports:
+            - containerPort: 15672
+            - containerPort: 5672
+        #- name: net-tools
+        #  image: praqma/network-multitool
+        - name: mongo-db-server
+          image: 192.168.0.10:5000/starter-kit-mongo
+          ports:
+            - containerPort: 27017
       volumes:
-        - name: config-volume
+        - name: config-volume-spring-boot
           configMap:
             name: spring-boot-starter-kit-config
 ---
@@ -57,10 +99,24 @@ metadata:
   name: spring-boot-starter-kit-ingress-1
 spec:
   rules:
-    - host: spring-boot-starter-kit.10.112.40.134.nip.io
+    - host: spring-boot-starter-kit.10.112.40.212.nip.io
       http:
         paths:
           - backend:
               serviceName: spring-boot-starter-kit-service
               servicePort: 80
 
+---
+#Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rabbitmq-server-ingress-1
+spec:
+  rules:
+    - host: rabbitmq-server.10.112.40.212.nip.io
+      http:
+        paths:
+          - backend:
+              serviceName: rabbitmq-server-service
+              servicePort: 15672

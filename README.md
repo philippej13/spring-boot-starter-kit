@@ -48,7 +48,7 @@ use starterkit
 ```
 Et créer le user
 ```
-mongo localhost:27017/starterkit /home/philippe/GIT/spring-boot-starter-kit/src/main/config/initMongoDB.js
+mongo localhost:27017/starterkit /home/philippe/GIT/spring-boot-starter-kit/docker/mongo/initMongoDB.js
 ```
 
 -------------------------
@@ -92,10 +92,15 @@ Erreurs :
 Si le message d'erreur suivant apparaît : "Bean method 'buildProperties' in 'ProjectInfoAutoConfiguration' not loaded because @ConditionalOnResource did not find resource '${spring.info.build.location:classpath:META-INF/build-info.properties}'"
 Faire un mvn package
 
-
+#Liste des tags de l'image
+```
+http://localhost:5000/v2/spring-boot-starter-kit-build/tags/list
+```
 #Build image Docker
 ```
-docker build -f docker/Dockerfile -t spring-boot-starter-kit:0.0.1 .
+docker build -f docker/Dockerfile -t spring-boot-starter-kit .
+docker tag spring-boot-starter-kit localhost:5000/spring-boot-starter-kit
+docker push localhost:5000/spring-boot-starter-kit
 ```
 # Run in docker
 Les fichiers de configuration de l'application et l'emplacements des log sont externalisés
@@ -115,30 +120,27 @@ docker-compose up
 
 
 ##Kubernetes
-Deux exemples pour gérer la configuration 
-
-#Directement avec les fichiers de configuratons (application.yml et logback.xml)
-Dans l'exemple de déploiement (deploy-without-configMap), il s'agit d'utiliser un intiContainer pour faire un git afin de récupérer les fichiers et de les monter dans un volume du container.
-
-
-#Création de du configMap avec les deux fichiers de configuration (application.yml et logback.xml)
+export KUBECONFIG=~/Documents/GIT/spring-boot-starter-kit/multipass/k3s.yaml
+#Création de du configMap avec les deux fichiers de configuration (application.yml et logback.xml) pour l'app spring-boot
 ``` 
 kubectl create configmap spring-boot-starter-kit-config --from-file=src/main/resources/logback.xml --from-file=src/main/resources/application.yml
 ```
 
 Et "montage" du configMap dans un volume 
 ```
-          envFrom:   # <- Magic happens here
-            - configMapRef:
-                name: spring-boot-starter-kit-config
+            volumeMounts:
+                - name: config-volume-spring-boot
+                  mountPath: /app/config
+            envFrom:   
+                - configMapRef:
+                  name: spring-boot-starter-kit-config
 ...
 ...
       volumes:
-        - name: config-volume
+        - name: config-volume-spring-boot
           configMap:
             name: spring-boot-starter-kit-config 
 ```
-
 
 
 #Run a local registry
@@ -159,15 +161,15 @@ Restart K3s
 sudo service k3s restart
 ```
 
-##Sur la machine local (permet de faire un docker push)
+##Sur la machine local (permet de faire un docker push sur du HTTP sans S)
 Dans fichier /etc/docker/daemon.json
 ```json
 {
-  "insecure-registries" : ["myregistrydomain.com:5000"]
+  "insecure-registries" : ["192.168.0.10:5000"]
 }
 ```
 Puis restart du service docker
 ```
 sudo service docker restart
 ```
-#Skaffold
+

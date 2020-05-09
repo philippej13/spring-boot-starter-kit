@@ -1,25 +1,14 @@
 FROM maven:3.6.3-jdk-11  AS MAVEN_BUILD
 
 # create app folder for sources
-
 RUN mkdir -p /build
-
 WORKDIR /build
-
 COPY pom.xml /build
-
 #Download all required dependencies into one layer
-
 RUN mvn -B dependency:resolve dependency:resolve-plugins
 
 #Copy source code
-
 COPY src /build/src
-RUN pwd
-RUN ls -l /build/src
-RUN cd src
-RUN pwd
-RUN ls /build/src/main/java/com/company/appli/configuration/ElasticSearchConfiguration.java
 # Build application
 RUN java --version
 RUN mvn -version
@@ -33,7 +22,6 @@ FROM openjdk:11
 EXPOSE 8083
 EXPOSE 5005
 ENV JAVA_OPTS -Xmx512m
-#RUN mkdir /deploy
 #Set app home folder
 ENV APP_HOME /app
 #Create base app folder
@@ -47,11 +35,8 @@ VOLUME $APP_HOME/config
 WORKDIR $APP_HOME
 
 #ADD target/*.jar app.jar
-RUN pwd
-RUN ls -l
 COPY --from=MAVEN_BUILD /build/target/*.jar /app
 RUN mv *.jar app.jar
-RUN ls -l
 #CMD java ${JAVA_OPTS} -Dserver.port=8083 -Djava.security.egd=file:/dev/./urandom -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar /deploy/app.jar
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Dserver.port=8083 -Djava.security.egd=file:/dev/./urandom -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005 -jar app.jar" ]
 #Second option using shell form:
