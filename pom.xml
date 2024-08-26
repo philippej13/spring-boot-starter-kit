@@ -21,7 +21,7 @@
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <springfox.version>2.9.2</springfox.version>
+        <springfox.version>2.10.0</springfox.version>
         <!-- <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version> -->
         <lombok.version>1.18.8</lombok.version>
         <elasticsearch.version>7.3.0</elasticsearch.version>
